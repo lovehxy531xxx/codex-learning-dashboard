@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codex 90 天训练台</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f766e'/%3E%3Cpath d='M18 20h28v6H18zm0 10h20v6H18zm0 10h28v6H18z' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span>90</span>
+          </div>
+          <div>
+            <p class="eyebrow">Codex 创业训练</p>
+            <h1>90 天学习与交付驾驶舱</h1>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="ghost-button" id="copyTodayPromptBtn" type="button">复制今日提示词</button>
+          <button class="primary-button" id="exportHeaderBtn" type="button">导出备份</button>
+        </div>
+      </header>
+
+      <nav class="tabbar" aria-label="主要视图">
+        <button class="tab is-active" type="button" data-tab="dashboard">总览</button>
+        <button class="tab" type="button" data-tab="daily">每日记录</button>
+        <button class="tab" type="button" data-tab="plans">每日计划</button>
+        <button class="tab" type="button" data-tab="map">90 天路线</button>
+        <button class="tab" type="button" data-tab="library">资料库</button>
+        <button class="tab" type="button" data-tab="prompts">提示词</button>
+        <button class="tab" type="button" data-tab="backup">备份</button>
+      </nav>
+
+      <main>
+        <section class="view is-active" id="dashboard" aria-labelledby="dashboardTitle">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Dashboard</p>
+              <h2 id="dashboardTitle">今天的位置</h2>
+            </div>
+            <div class="date-control">
+              <label for="startDateInput">起始日</label>
+              <input id="startDateInput" type="date" />
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel focus-panel">
+              <div class="phase-line">
+                <span class="pill" id="todayDayPill">Day 1</span>
+                <span id="todayPhaseName">基本功阶段</span>
+              </div>
+              <h3 id="todayAssignmentTitle">搭建训练系统</h3>
+              <p id="todayAssignmentBody"></p>
+              <div class="progress-block">
+                <div class="progress-meta">
+                  <span>90 天进度</span>
+                  <strong id="timelinePercent">0%</strong>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                  <div class="progress-fill" id="timelineFill"></div>
+                </div>
+              </div>
+              <div class="deliverable-box">
+                <span>今日交付物</span>
+                <strong id="todayDeliverable"></strong>
+              </div>
+            </article>
+
+            <article class="panel stat-panel">
+              <h3>累计数据</h3>
+              <div class="stat-grid">
+                <div class="stat-card">
+                  <span>记录天数</span>
+                  <strong id="statLoggedDays">0</strong>
+                </div>
+                <div class="stat-card">
+                  <span>投入小时</span>
+                  <strong id="statHours">0</strong>
+                </div>
+                <div class="stat-card">
+                  <span>工具产出</span>
+                  <strong id="statTools">0</strong>
+                </div>
+                <div class="stat-card">
+                  <span>用户触达</span>
+                  <strong id="statOutreach">0</strong>
+                </div>
+                <div class="stat-card">
+                  <span>内容发布</span>
+                  <strong id="statContent">0</strong>
+                </div>
+                <div class="stat-card">
+                  <span>复盘完成</span>
+                  <strong id="statReviews">0</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel checklist-panel">
+              <div class="panel-heading">
+                <h3>今日动作</h3>
+                <button class="small-button" id="jumpDailyBtn" type="button">填写记录</button>
+              </div>
+              <div class="checklist" id="todayChecklist"></div>
+            </article>
+
+            <article class="panel action-panel">
+              <div class="panel-heading">
+                <h3>今日具体安排</h3>
+                <span class="muted-label" id="todayActionCount">0/0</span>
+              </div>
+              <div class="action-list compact" id="todayActionList"></div>
+            </article>
+
+            <article class="panel insight-panel">
+              <h3>最近 7 天</h3>
+              <div class="mini-chart" id="weekChart" aria-label="最近 7 天投入小时"></div>
+              <div class="weekly-note">
+                <span>本周重点</span>
+                <strong id="weekFocusText"></strong>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="daily" aria-labelledby="dailyTitle">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Daily Log</p>
+              <h2 id="dailyTitle">每日记录</h2>
+            </div>
+            <div class="day-switcher">
+              <button class="icon-button" id="prevDayBtn" type="button" aria-label="前一天">←</button>
+              <label for="selectedDayInput">Day</label>
+              <input id="selectedDayInput" type="number" min="1" max="90" />
+              <button class="icon-button" id="nextDayBtn" type="button" aria-label="后一天">→</button>
+              <button class="small-button" id="todayBtn" type="button">今天</button>
+            </div>
+          </div>
+
+          <div class="daily-grid">
+            <article class="panel daily-main">
+              <div class="record-header">
+                <div>
+                  <span class="pill" id="dailyPhasePill">阶段</span>
+                  <h3 id="dailyAssignmentTitle">今日任务</h3>
+                </div>
+                <div class="date-control compact">
+                  <label for="entryDateInput">日期</label>
+                  <input id="entryDateInput" type="date" />
+                </div>
+              </div>
+              <p class="assignment-copy" id="dailyAssignmentBody"></p>
+
+              <section class="action-plan-block" aria-labelledby="dailyActionTitle">
+                <div class="panel-heading">
+                  <h3 id="dailyActionTitle">今日具体行动清单</h3>
+                  <span class="muted-label" id="dailyActionCount">0/0</span>
+                </div>
+                <div class="action-list" id="dailyActionList"></div>
+              </section>
+
+              <div class="form-grid hours-grid">
+                <label>
+                  <span>学习小时</span>
+                  <input class="autosave" type="number" min="0" step="0.5" data-hour="learning" />
+                </label>
+                <label>
+                  <span>做工具小时</span>
+                  <input class="autosave" type="number" min="0" step="0.5" data-hour="building" />
+                </label>
+                <label>
+                  <span>需求研究小时</span>
+                  <input class="autosave" type="number" min="0" step="0.5" data-hour="research" />
+                </label>
+                <label>
+                  <span>找客户小时</span>
+                  <input class="autosave" type="number" min="0" step="0.5" data-hour="outreachWork" />
+                </label>
+                <label>
+                  <span>内容小时</span>
+                  <input class="autosave" type="number" min="0" step="0.5" data-hour="contentWork" />
+                </label>
+                <label>
+                  <span>复盘小时</span>
+                  <input class="autosave" type="number" min="0" step="0.5" data-hour="reviewWork" />
+                </label>
+              </div>
+
+              <div class="form-grid metric-grid">
+                <label>
+                  <span>工具/功能产出</span>
+                  <input class="autosave" type="number" min="0" step="1" data-metric="tools" />
+                </label>
+                <label>
+                  <span>用户触达人数</span>
+                  <input class="autosave" type="number" min="0" step="1" data-metric="outreach" />
+                </label>
+                <label>
+                  <span>有效沟通次数</span>
+                  <input class="autosave" type="number" min="0" step="1" data-metric="conversations" />
+                </label>
+                <label>
+                  <span>内容发布条数</span>
+                  <input class="autosave" type="number" min="0" step="1" data-metric="content" />
+                </label>
+              </div>
+
+              <div class="checkbox-block">
+                <label><input class="autosave" type="checkbox" data-block="learn" /> 学习</label>
+                <label><input class="autosave" type="checkbox" data-block="build" /> 做工具</label>
+                <label><input class="autosave" type="checkbox" data-block="research" /> 需求研究</label>
+                <label><input class="autosave" type="checkbox" data-block="outreach" /> 找客户</label>
+                <label><input class="autosave" type="checkbox" data-block="publish" /> 发内容</label>
+                <label><input class="autosave" type="checkbox" data-block="review" /> 复盘</label>
+              </div>
+
+              <div class="textarea-grid">
+                <label>
+                  <span>今天学习了什么</span>
+                  <textarea class="autosave" data-field="learningNotes" rows="5"></textarea>
+                </label>
+                <label>
+                  <span>今天做了什么工具/功能</span>
+                  <textarea class="autosave" data-field="buildNotes" rows="5"></textarea>
+                </label>
+                <label>
+                  <span>今天发现的需求和痛点</span>
+                  <textarea class="autosave" data-field="demandNotes" rows="5"></textarea>
+                </label>
+                <label>
+                  <span>今天和谁沟通了</span>
+                  <textarea class="autosave" data-field="outreachNotes" rows="5"></textarea>
+                </label>
+              </div>
+            </article>
+
+            <aside class="panel review-panel">
+              <h3>每日复盘</h3>
+              <label>
+                <span>今天最大的收获</span>
+                <textarea class="autosave" data-review="win" rows="4"></textarea>
+              </label>
+              <label>
+                <span>今天卡住的问题</span>
+                <textarea class="autosave" data-review="problem" rows="4"></textarea>
+              </label>
+              <label>
+                <span>真实用户信号</span>
+                <textarea class="autosave" data-review="signal" rows="4"></textarea>
+              </label>
+              <label>
+                <span>明天第一件事</span>
+                <textarea class="autosave" data-review="next" rows="3"></textarea>
+              </label>
+              <div class="idea-card-form">
+                <h4>需求卡</h4>
+                <label>
+                  <span>目标用户</span>
+                  <input class="autosave" type="text" data-idea="user" />
+                </label>
+                <label>
+                  <span>痛点</span>
+                  <input class="autosave" type="text" data-idea="pain" />
+                </label>
+                <label>
+                  <span>第一版工具</span>
+                  <input class="autosave" type="text" data-idea="mvp" />
+                </label>
+                <label>
+                  <span>付费可能</span>
+                  <select class="autosave" data-idea="pay">
+                    <option value="">未判断</option>
+                    <option value="低">低</option>
+                    <option value="中">中</option>
+                    <option value="高">高</option>
+                  </select>
+                </label>
+              </div>
+              <div class="button-row">
+                <button class="primary-button" id="saveDayBtn" type="button">保存今日</button>
+                <button class="ghost-button" id="copySummaryBtn" type="button">复制日报</button>
+              </div>
+              <p class="save-status" id="saveStatus">已启用本地保存</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="plans" aria-labelledby="plansTitle">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Daily Plan</p>
+              <h2 id="plansTitle">每日计划</h2>
+            </div>
+            <div class="day-switcher">
+              <button class="icon-button" id="planPrevDayBtn" type="button" aria-label="前一天">←</button>
+              <label for="planSelectedDayInput">Day</label>
+              <input id="planSelectedDayInput" type="number" min="1" max="90" />
+              <button class="icon-button" id="planNextDayBtn" type="button" aria-label="后一天">→</button>
+              <button class="small-button" id="planTodayBtn" type="button">今天</button>
+            </div>
+          </div>
+
+          <div class="plan-layout">
+            <aside class="panel plan-list-panel">
+              <div class="panel-heading">
+                <h3>90 天全部计划</h3>
+                <span class="muted-label" id="planOverallCount">0/90</span>
+              </div>
+              <div class="plan-day-list" id="planDayList"></div>
+            </aside>
+
+            <article class="panel plan-detail-panel">
+              <div class="record-header">
+                <div>
+                  <span class="pill" id="planPhasePill">阶段</span>
+                  <h3 id="planAssignmentTitle">当天主任务</h3>
+                </div>
+                <div class="plan-progress-card">
+                  <span>当天进度</span>
+                  <strong id="planActionCount">0/0</strong>
+                </div>
+              </div>
+              <p class="assignment-copy" id="planAssignmentBody"></p>
+              <div class="deliverable-box">
+                <span>当天交付物</span>
+                <strong id="planDeliverableText"></strong>
+              </div>
+              <div class="action-list note-mode" id="planActionList"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="map" aria-labelledby="mapTitle">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Roadmap</p>
+              <h2 id="mapTitle">90 天路线</h2>
+            </div>
+          </div>
+          <div class="phase-strip" id="phaseStrip"></div>
+          <div class="map-layout">
+            <div class="day-grid" id="dayGrid" aria-label="90 天训练格"></div>
+            <article class="panel day-detail">
+              <span class="pill" id="mapDayPill">Day 1</span>
+              <h3 id="mapTitleText">今日任务</h3>
+              <p id="mapBodyText"></p>
+              <div class="deliverable-box">
+                <span>交付物</span>
+                <strong id="mapDeliverableText"></strong>
+              </div>
+              <div class="mini-meta" id="mapMetaText"></div>
+              <div class="map-actions">
+                <h4>当天具体动作</h4>
+                <div class="action-list compact" id="mapActionList"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="library" aria-labelledby="libraryTitle">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Learning Library</p>
+              <h2 id="libraryTitle">学习资料</h2>
+            </div>
+          </div>
+          <div class="resource-grid" id="resourceGrid"></div>
+        </section>
+
+        <section class="view" id="prompts" aria-labelledby="promptsTitle">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Prompt Library</p>
+              <h2 id="promptsTitle">常用提示词</h2>
+            </div>
+          </div>
+          <div class="prompt-grid" id="promptGrid"></div>
+        </section>
+
+        <section class="view" id="backup" aria-labelledby="backupTitle">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Data</p>
+              <h2 id="backupTitle">本地数据与备份</h2>
+            </div>
+          </div>
+          <div class="backup-layout">
+            <article class="panel">
+              <h3>导出</h3>
+              <p class="muted">下载 JSON 文件，保留你的学习记录、复盘、需求卡和进度数据。</p>
+              <button class="primary-button" id="exportDataBtn" type="button">下载备份文件</button>
+            </article>
+            <article class="panel">
+              <h3>导入</h3>
+              <p class="muted">选择之前导出的 JSON 文件，恢复到这台电脑的浏览器本地数据。</p>
+              <input id="importFileInput" type="file" accept="application/json" />
+            </article>
+            <article class="panel">
+              <h3>当前数据</h3>
+              <div class="data-preview" id="dataPreview"></div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
